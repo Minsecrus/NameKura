@@ -19,7 +19,7 @@ export function TopIslands({
       </div>
 
       <div className="pointer-events-auto ml-3 mr-3 w-[min(42rem,48vw)]">
-        <div className="island flex h-[3.25rem] items-center rounded-full px-4">
+        <div className="island flex h-13 items-center rounded-full px-4">
           <svg viewBox="0 0 24 24" className="mr-3 h-4 w-4 shrink-0 text-[#0052CC]/72" fill="none">
             <circle cx="11" cy="11" r="6.5" stroke="currentColor" strokeWidth="1.6" />
             <path d="M16 16L20 20" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />

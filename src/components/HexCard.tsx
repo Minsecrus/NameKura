@@ -49,7 +49,7 @@ export function HexCard({
           <span key={rippleToken} className="hex-ripple" aria-hidden="true" />
         ) : null}
 
-        <div className="relative z-[1] select-none text-center text-[clamp(1.05rem,1.4vw,1.3rem)] font-medium tracking-[0.18em]">
+        <div className="relative z-1 select-none text-center text-[clamp(1.05rem,1.4vw,1.3rem)] font-medium tracking-[0.18em]">
           <span style={{ color: BRAND }}>{card.surname}</span>
           <span className="text-black">{card.givenName}</span>
         </div>

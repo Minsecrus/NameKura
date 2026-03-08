@@ -215,7 +215,7 @@ function App() {
 
   return (
     <main className="h-screen overflow-hidden bg-white text-black selection:bg-[#0052CC]/15">
-      <div className="pointer-events-none fixed inset-0 bg-[radial-gradient(circle_at_top,_rgba(0,82,204,0.12),_transparent_34%),linear-gradient(180deg,#ffffff_0%,#fbfcff_48%,#ffffff_100%)]" />
+      <div className="pointer-events-none fixed inset-0 bg-[radial-gradient(circle_at_top,rgba(0,82,204,0.12),transparent_34%),linear-gradient(180deg,#ffffff_0%,#fbfcff_48%,#ffffff_100%)]" />
 
       <TopIslands
         filterQuery={filterQuery}
