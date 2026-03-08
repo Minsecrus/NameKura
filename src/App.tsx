@@ -159,20 +159,8 @@ function App() {
     await copyText(card.name);
     try {
       await recordCopy(card.id);
-    } catch (error) {
+    } catch {
       // Ignore analytics write failures after the clipboard action succeeds.
-      console.error("[copy] rpc failed", {
-        id: card.id,
-        error,
-      });
-      if (error && typeof error === "object") {
-        console.error("[copy] rpc failed details", {
-          code: "code" in error ? error.code : undefined,
-          details: "details" in error ? error.details : undefined,
-          hint: "hint" in error ? error.hint : undefined,
-          message: "message" in error ? error.message : undefined,
-        });
-      }
     }
     setRippleCardId(card.id);
     setRippleToken(`${card.id}-${Date.now()}`);
@@ -180,29 +168,13 @@ function App() {
   }, []);
 
   const handleVote = useCallback((id: string, delta: "up" | "down") => {
-    console.log("[vote] click", { id, delta });
-
     void (async () => {
       try {
         const updated = await voteName(id, delta);
-        console.log("[vote] rpc success", { id, delta, updated });
         setItems((current) =>
           current.map((item) => (item.id === id ? updated : item)),
         );
-      } catch (error) {
-        console.error("[vote] rpc failed, fallback to local update", {
-          id,
-          delta,
-          error,
-        });
-        if (error && typeof error === "object") {
-          console.error("[vote] rpc failed details", {
-            code: "code" in error ? error.code : undefined,
-            details: "details" in error ? error.details : undefined,
-            hint: "hint" in error ? error.hint : undefined,
-            message: "message" in error ? error.message : undefined,
-          });
-        }
+      } catch {
         setItems((current) =>
           current.map((item) => {
             if (item.id !== id) {
