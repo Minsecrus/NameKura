@@ -88,6 +88,38 @@ pnpm dev
 pnpm build
 ```
 
+## 部署到 GitHub Pages
+
+这个项目可以直接部署到 GitHub Pages，因为前端是纯静态站点，Supabase 作为外部后端服务提供数据和 RPC。
+
+仓库中已经包含：
+
+- GitHub Pages 所需工作流：[`/.github/workflows/deploy-pages.yml`](./.github/workflows/deploy-pages.yml)
+- 适配仓库子路径的 Vite `base` 配置：[`vite.config.ts`](./vite.config.ts)
+
+### 需要配置的 GitHub Secrets
+
+在 GitHub 仓库中添加以下 Actions secrets：
+
+- `VITE_SUPABASE_URL`
+- `VITE_SUPABASE_ANON_KEY`
+
+路径：
+
+- `Settings`
+- `Secrets and variables`
+- `Actions`
+
+### 需要开启 GitHub Pages
+
+在 GitHub 仓库设置中：
+
+- 打开 `Settings`
+- 打开 `Pages`
+- `Build and deployment` 选择 `GitHub Actions`
+
+之后每次推送到 `main`，都会自动构建并部署。
+
 ## Supabase 说明
 
 当前后端方案是匿名优先：
