@@ -1,0 +1,255 @@
+@import url("https://fonts.googleapis.com/css2?family=Limelight&display=swap");
+@import "tailwindcss";
+
+:root {
+  font-family:
+    Inter, "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif;
+  color: #000000;
+  background: #ffffff;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  min-width: 320px;
+  overflow: hidden;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  background: #ffffff;
+  overflow: hidden;
+}
+
+button {
+  font: inherit;
+}
+
+button,
+input {
+  font: inherit;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+.island {
+  border: 1px solid rgb(0 0 0 / 0.06);
+  background: rgb(255 255 255 / 0.94);
+  box-shadow: 0 10px 34px rgb(0 0 0 / 0.07);
+  backdrop-filter: blur(18px);
+}
+
+.island-tight {
+  border-radius: 1.5rem;
+  padding: 0.9rem 1.05rem;
+}
+
+.brand-wordmark {
+  font-family:
+    "Limelight", "Aptos Display", "Segoe UI Variable Display", "Bahnschrift",
+    "Inter", sans-serif;
+  font-style: normal;
+  font-weight: 400;
+  letter-spacing: -0.06em;
+}
+
+.island-icon {
+  display: inline-flex;
+  height: 3.25rem;
+  width: 3.25rem;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+}
+
+.hex-board {
+  display: flex;
+  align-items: flex-start;
+  width: max-content;
+}
+
+.hex-column {
+  display: grid;
+  grid-auto-rows: var(--hex-height);
+  gap: var(--hex-gap);
+  justify-content: start;
+}
+
+.hex-column + .hex-column {
+  margin-left: calc(var(--hex-overlap) * -1);
+}
+
+.hex-column-offset {
+  margin-top: var(--hex-offset);
+}
+
+.hex-card {
+  position: relative;
+  height: var(--hex-height);
+  width: var(--hex-width);
+  cursor: pointer;
+  outline: none;
+  user-select: none;
+  -webkit-user-drag: none;
+  transition:
+    transform 180ms ease,
+    filter 180ms ease;
+  clip-path: polygon(12% 0, 88% 0, 100% 50%, 88% 100%, 12% 100%, 0 50%);
+}
+
+.hex-card:hover,
+.hex-card:focus-visible {
+  transform: translateY(-4px);
+}
+
+.hex-card:focus-visible .hex-card-inner {
+  filter: drop-shadow(0 0 0.45rem rgb(0 82 204 / 0.12));
+}
+
+.hex-card-inner {
+  position: relative;
+  display: flex;
+  height: 100%;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background: transparent;
+  clip-path: inherit;
+}
+
+.hex-card * {
+  -webkit-user-drag: none;
+}
+
+.hex-outline {
+  position: absolute;
+  inset: 1.5px;
+  z-index: 0;
+  height: 100%;
+  width: 100%;
+  pointer-events: none;
+}
+
+.hex-outline polygon {
+  fill: none;
+  stroke: rgb(0 0 0 / 0.12);
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+}
+
+.hex-card:hover .hex-outline polygon,
+.hex-card:focus-visible .hex-outline polygon {
+  stroke: rgb(0 82 204 / 0.28);
+}
+
+.hex-ripple {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  height: 1rem;
+  width: 1rem;
+  border-radius: 9999px;
+  background: rgb(0 82 204 / 0.12);
+  transform: translate(-50%, -50%);
+  animation: hex-ripple 680ms ease-out forwards;
+}
+
+.hex-vote-bar {
+  position: absolute;
+  bottom: 1.1rem;
+  left: 50%;
+  z-index: 1;
+  display: flex;
+  gap: 0.4rem;
+  opacity: 0;
+  transform: translateX(-50%) translateY(4px);
+  transition:
+    opacity 160ms ease,
+    transform 160ms ease;
+}
+
+.group:hover .hex-vote-bar,
+.group:focus-within .hex-vote-bar {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+.hex-vote-dot {
+  display: inline-flex;
+  height: 1.35rem;
+  min-width: 1.35rem;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+  border: 1px solid rgb(0 0 0 / 0.06);
+  background: rgb(255 255 255 / 0.78);
+  padding: 0 0.38rem;
+}
+
+.hex-vote-dot:hover {
+  border-color: rgb(0 82 204 / 0.22);
+  background: rgb(255 255 255 / 0.94);
+}
+
+.hex-vote-core {
+  height: 0.28rem;
+  width: 0.28rem;
+  border-radius: 9999px;
+  background: #0052cc;
+}
+
+.hex-vote-core-muted {
+  background: rgb(0 0 0 / 0.3);
+}
+
+.hex-vote-count {
+  font-size: 0.68rem;
+  line-height: 1;
+  color: #0052cc;
+}
+
+.hex-vote-count-muted {
+  color: rgb(0 0 0 / 0.42);
+}
+
+.hex-viewport {
+  position: relative;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+  cursor: grab;
+  touch-action: none;
+}
+
+.hex-viewport.is-dragging {
+  cursor: grabbing;
+}
+
+.hex-canvas {
+  position: absolute;
+  left: 0;
+  top: 0;
+  will-change: transform;
+}
+
+@keyframes hex-ripple {
+  0% {
+    opacity: 0.42;
+    transform: translate(-50%, -50%) scale(1);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(28);
+  }
+}
