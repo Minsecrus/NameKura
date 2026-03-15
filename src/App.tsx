@@ -43,8 +43,6 @@ function App() {
   const [uploadName, setUploadName] = useState("");
   const [toast, setToast] = useState<string | null>(null);
   const [loadError, setLoadError] = useState<string | null>(null);
-  const [rippleToken, setRippleToken] = useState("");
-  const [rippleCardId, setRippleCardId] = useState<string | null>(null);
   const [themeColor, setThemeColor] = useState(INITIAL_THEME_COLOR);
   const [isKuraLarge, setIsKuraLarge] = useState(false);
   const viewportRef = useRef<HTMLDivElement | null>(null);
@@ -174,16 +172,18 @@ function App() {
     } as CSSProperties;
   }, [themeColor]);
 
-  const handleCopy = useCallback(async (card: NameCard) => {
-    await copyText(card.name);
-    try {
-      await recordCopy(card.id);
-    } catch {
-      // Ignore analytics write failures after the clipboard action succeeds.
-    }
-    setRippleCardId(card.id);
-    setRippleToken(`${card.id}-${Date.now()}`);
+  const handleCopy = useCallback((card: NameCard) => {
     setToast("已拾取");
+
+    void (async () => {
+      await copyText(card.name);
+
+      try {
+        await recordCopy(card.id);
+      } catch {
+        // Ignore analytics write failures after the clipboard action succeeds.
+      }
+    })();
   }, []);
 
   const handleVote = useCallback((id: string, delta: "up" | "down") => {
@@ -274,8 +274,6 @@ function App() {
           viewportHeight={viewportHeight}
           viewportWidth={viewportWidth}
           columns={columns}
-          rippleCardId={rippleCardId}
-          rippleToken={rippleToken}
           onCopy={handleCopy}
           onVote={handleVote}
         />

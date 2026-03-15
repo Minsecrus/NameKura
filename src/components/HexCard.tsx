@@ -1,26 +1,63 @@
-import type { KeyboardEvent } from "react";
+import { useEffect, useRef, useState } from "react";
+import type { KeyboardEvent, PointerEvent } from "react";
 import type { NameCard } from "@/types/name";
 
 type HexCardProps = {
   card: NameCard;
-  isRippleActive: boolean;
   isNameLarge: boolean;
-  rippleToken: string;
   onCopy: (card: NameCard) => void | Promise<void>;
   onVote: (id: string, delta: "up" | "down") => void;
 };
 
 export function HexCard({
   card,
-  isRippleActive,
   isNameLarge,
-  rippleToken,
   onCopy,
   onVote,
 }: HexCardProps) {
+  const [rippleToken, setRippleToken] = useState("");
+  const rippleTimerRef = useRef<number | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (rippleTimerRef.current) {
+        window.clearTimeout(rippleTimerRef.current);
+      }
+    };
+  }, []);
+
+  const triggerRipple = () => {
+    setRippleToken(`${card.id}-${Date.now()}`);
+
+    if (rippleTimerRef.current) {
+      window.clearTimeout(rippleTimerRef.current);
+    }
+
+    rippleTimerRef.current = window.setTimeout(() => {
+      setRippleToken("");
+      rippleTimerRef.current = null;
+    }, 700);
+  };
+
+  const handlePointerDown = (event: PointerEvent<HTMLElement>) => {
+    if (event.target instanceof HTMLElement && event.target.closest("button")) {
+      return;
+    }
+
+    event.stopPropagation();
+
+    if (!event.isPrimary || event.button !== 0) {
+      return;
+    }
+
+    triggerRipple();
+    void onCopy(card);
+  };
+
   const handleKeyDown = (event: KeyboardEvent<HTMLElement>) => {
     if (event.key === "Enter" || event.key === " ") {
       event.preventDefault();
+      triggerRipple();
       void onCopy(card);
     }
   };
@@ -32,7 +69,7 @@ export function HexCard({
       role="button"
       aria-label={`复制名字 ${card.name}`}
       className="hex-card group"
-      onClick={() => void onCopy(card)}
+      onPointerDown={handlePointerDown}
       onKeyDown={handleKeyDown}
     >
       <div className="hex-card-inner">
@@ -45,7 +82,7 @@ export function HexCard({
           <polygon points="12,0 88,0 100,50 88,100 12,100 0,50" />
         </svg>
 
-        {isRippleActive ? (
+        {rippleToken ? (
           <span key={rippleToken} className="hex-ripple" aria-hidden="true" />
         ) : null}
 

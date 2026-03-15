@@ -18,8 +18,6 @@ type HexBoardProps = {
   viewportHeight: number;
   viewportWidth: number;
   columns: NameCard[][];
-  rippleCardId: string | null;
-  rippleToken: string;
   onCopy: (card: NameCard) => void | Promise<void>;
   onVote: (id: string, delta: "up" | "down") => void;
 };
@@ -33,8 +31,6 @@ export function HexBoard({
   viewportHeight,
   viewportWidth,
   columns,
-  rippleCardId,
-  rippleToken,
   onCopy,
   onVote,
 }: HexBoardProps) {
@@ -167,9 +163,7 @@ export function HexBoard({
                 <HexCard
                   key={card.id}
                   card={card}
-                  isRippleActive={rippleCardId === card.id}
                   isNameLarge={isNameLarge}
-                  rippleToken={rippleToken}
                   onCopy={onCopy}
                   onVote={onVote}
                 />
