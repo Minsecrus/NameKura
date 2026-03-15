@@ -14,6 +14,7 @@ type HexBoardProps = {
     tileWidth: number;
   };
   canvasColumns: number;
+  isNameLarge: boolean;
   viewportHeight: number;
   viewportWidth: number;
   columns: NameCard[][];
@@ -28,6 +29,7 @@ export function HexBoard({
   boardStyle,
   boardMetrics,
   canvasColumns,
+  isNameLarge,
   viewportHeight,
   viewportWidth,
   columns,
@@ -166,6 +168,7 @@ export function HexBoard({
                   key={card.id}
                   card={card}
                   isRippleActive={rippleCardId === card.id}
+                  isNameLarge={isNameLarge}
                   rippleToken={rippleToken}
                   onCopy={onCopy}
                   onVote={onVote}

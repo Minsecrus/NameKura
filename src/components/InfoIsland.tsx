@@ -35,14 +35,15 @@ export function InfoIsland({ isOpen, onOpen, onClose }: InfoIslandProps) {
                 是一个极简中文名字画布，用来浏览、复制、上传和轻量评价名字。
               </p>
               <p>
-                点击名字卡片可以复制。名字卡片下方蓝点为点赞，灰点为点踩。右上方的新建按钮可以上传名字，点击回车即可提交。
+                点击名字卡片可以复制。名字卡片下方蓝点为点赞，灰点为点踩（不要用脚投票！！！）。右上方的新建按钮可以上传名字，点击回车即可提交。
               </p>
+              <p>感谢 Syu 对此项目的支持。</p>
               <p>MIT 开源。使用 Limelight 字体。</p>
               <a
                 href="https://github.com/Minsecrus/NameKura"
                 target="_blank"
                 rel="noreferrer"
-                className="inline-flex text-[#0052CC] underline underline-offset-4"
+                className="inline-flex text-[var(--theme-color)] underline underline-offset-4 transition-[color] duration-500 ease-out"
               >
                 GitHub
               </a>

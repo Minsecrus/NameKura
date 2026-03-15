@@ -16,12 +16,19 @@ import {
   buildUserCard,
   generateBatch,
 } from "@/lib/name-data";
+import { shouldDisplayName } from "@/lib/name-visibility";
 import {
   HEX_GAP,
   getBoardMetrics,
   getCanvasColumnCount,
   getVisibleColumnCount,
 } from "@/lib/board-layout";
+import {
+  generateDeepVividThemeColor,
+  hexToRgb,
+  INITIAL_THEME_COLOR,
+  toRgbString,
+} from "@/lib/theme";
 import type { NameCard } from "@/types/name";
 
 function App() {
@@ -38,6 +45,8 @@ function App() {
   const [loadError, setLoadError] = useState<string | null>(null);
   const [rippleToken, setRippleToken] = useState("");
   const [rippleCardId, setRippleCardId] = useState<string | null>(null);
+  const [themeColor, setThemeColor] = useState(INITIAL_THEME_COLOR);
+  const [isKuraLarge, setIsKuraLarge] = useState(false);
   const viewportRef = useRef<HTMLDivElement | null>(null);
   const toastTimerRef = useRef<number | null>(null);
 
@@ -123,12 +132,13 @@ function App() {
 
   const filteredItems = useMemo(() => {
     const query = filterQuery.trim();
+    const visibleItems = items.filter(shouldDisplayName);
 
     if (!query) {
-      return items;
+      return visibleItems;
     }
 
-    return items.filter((item) =>
+    return visibleItems.filter((item) =>
       `${item.name} ${item.tags.join(" ")}`.includes(query),
     );
   }, [filterQuery, items]);
@@ -154,6 +164,15 @@ function App() {
     "--hex-overlap": `${boardMetrics.overlap}px`,
     "--hex-width": `${boardMetrics.tileWidth}px`,
   } as CSSProperties;
+
+  const themeStyle = useMemo(() => {
+    const rgb = hexToRgb(themeColor);
+
+    return {
+      "--theme-color": themeColor,
+      "--theme-rgb": toRgbString(rgb),
+    } as CSSProperties;
+  }, [themeColor]);
 
   const handleCopy = useCallback(async (card: NameCard) => {
     await copyText(card.name);
@@ -213,13 +232,33 @@ function App() {
     })();
   }, [uploadName]);
 
+  const handleThemeShuffle = useCallback(() => {
+    setThemeColor(generateDeepVividThemeColor());
+  }, []);
+
+  const handleKuraSizeToggle = useCallback(() => {
+    setIsKuraLarge((current) => !current);
+  }, []);
+
   return (
-    <main className="h-screen overflow-hidden bg-white text-black selection:bg-[#0052CC]/15">
-      <div className="pointer-events-none fixed inset-0 bg-[radial-gradient(circle_at_top,rgba(0,82,204,0.12),transparent_34%),linear-gradient(180deg,#ffffff_0%,#fbfcff_48%,#ffffff_100%)]" />
+    <main
+      className="h-screen overflow-hidden bg-white text-black selection:bg-[rgb(var(--theme-rgb)/0.15)]"
+      style={themeStyle}
+    >
+      <div
+        className="pointer-events-none fixed inset-0"
+        style={{
+          background: `radial-gradient(circle at top, rgb(var(--theme-rgb) / 0.12), transparent 34%), linear-gradient(180deg, #ffffff 0%, #fbfcff 48%, #ffffff 100%)`,
+          transition: "background 320ms ease",
+        }}
+      />
 
       <TopIslands
         filterQuery={filterQuery}
+        isKuraLarge={isKuraLarge}
         onFilterChange={setFilterQuery}
+        onThemeShuffle={handleThemeShuffle}
+        onKuraSizeToggle={handleKuraSizeToggle}
         onUploadOpen={() => setIsUploadOpen(true)}
       />
 
@@ -231,6 +270,7 @@ function App() {
           boardStyle={boardStyle}
           boardMetrics={boardMetrics}
           canvasColumns={canvasColumns}
+          isNameLarge={isKuraLarge}
           viewportHeight={viewportHeight}
           viewportWidth={viewportWidth}
           columns={columns}

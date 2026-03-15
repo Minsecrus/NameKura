@@ -28,7 +28,7 @@ export function UploadModal({
 
   return (
     <div
-      className="fixed inset-0 z-40 flex items-center justify-center bg-[#0052CC]/8 p-4 backdrop-blur-sm"
+      className="fixed inset-0 z-40 flex items-center justify-center bg-[rgb(var(--theme-rgb)/0.08)] p-4 backdrop-blur-sm transition-[background-color] duration-500 ease-out"
       onClick={onClose}
     >
       <div
@@ -40,7 +40,7 @@ export function UploadModal({
           value={value}
           onChange={(event) => onChange(event.target.value)}
           onKeyDown={handleKeyDown}
-          className="w-full rounded-[1.2rem] border border-black/8 bg-transparent px-4 py-4 text-base font-medium outline-none transition placeholder:text-black/22 focus:border-[#0052CC]"
+          className="w-full rounded-[1.2rem] border border-black/8 bg-transparent px-4 py-4 text-base font-medium outline-none transition-[border-color] duration-500 ease-out placeholder:text-black/22 focus:border-[var(--theme-color)]"
         />
       </div>
     </div>

@@ -1,11 +1,10 @@
 import type { KeyboardEvent } from "react";
 import type { NameCard } from "@/types/name";
 
-const BRAND = "#0052CC";
-
 type HexCardProps = {
   card: NameCard;
   isRippleActive: boolean;
+  isNameLarge: boolean;
   rippleToken: string;
   onCopy: (card: NameCard) => void | Promise<void>;
   onVote: (id: string, delta: "up" | "down") => void;
@@ -14,6 +13,7 @@ type HexCardProps = {
 export function HexCard({
   card,
   isRippleActive,
+  isNameLarge,
   rippleToken,
   onCopy,
   onVote,
@@ -49,8 +49,16 @@ export function HexCard({
           <span key={rippleToken} className="hex-ripple" aria-hidden="true" />
         ) : null}
 
-        <div className="relative z-1 select-none text-center text-[clamp(1.05rem,1.4vw,1.3rem)] font-medium tracking-[0.18em]">
-          <span style={{ color: BRAND }}>{card.surname}</span>
+        <div
+          className={`relative z-1 select-none text-center font-medium tracking-[0.18em] transition-[font-size,transform,letter-spacing] duration-300 ease-out ${
+            isNameLarge
+              ? "translate-y-[-1px] text-[clamp(1.3rem,1.7vw,1.65rem)]"
+              : "translate-y-0 text-[clamp(1.05rem,1.4vw,1.3rem)]"
+          }`}
+        >
+          <span className="text-[var(--theme-color)] transition-[color] duration-500 ease-out">
+            {card.surname}
+          </span>
           <span className="text-black">{card.givenName}</span>
         </div>
 
