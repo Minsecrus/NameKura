@@ -18,8 +18,8 @@ export function TopIslands({
   return (
     <header className="pointer-events-none fixed inset-x-0 top-0 z-30 flex items-start justify-between p-4 sm:p-6">
       {/* Logo Island */}
-      <div className="pointer-events-auto island island-tight">
-        <p className="brand-wordmark text-[1.45rem] leading-none tracking-[-0.08em]">
+      <div className="pointer-events-auto island island-tight shrink-0">
+        <p className="brand-wordmark flex whitespace-nowrap text-[1.2rem] leading-none tracking-[-0.08em] sm:text-[1.45rem]">
           <button
             type="button"
             className="cursor-pointer text-[var(--theme-color)] outline-none transition-[color,transform] duration-300 ease-out hover:-translate-y-[1px]"
@@ -44,11 +44,11 @@ export function TopIslands({
       </div>
 
       {/* Filter Island */}
-      <div className="pointer-events-auto ml-3 mr-3 w-[min(42rem,48vw)]">
-        <div className="island flex h-13 items-center rounded-full px-4">
+      <div className="pointer-events-auto mx-2 min-w-0 flex-1 sm:mx-3 sm:w-[min(42rem,48vw)] sm:flex-none">
+        <div className="island flex h-13 items-center rounded-full px-3 sm:px-4">
           <svg
             viewBox="0 0 24 24"
-            className="mr-3 h-4 w-4 shrink-0 text-[rgb(var(--theme-rgb)/0.72)] transition-[color] duration-500 ease-out"
+            className="mr-2 h-4 w-4 shrink-0 text-[rgb(var(--theme-rgb)/0.72)] transition-[color] duration-500 ease-out sm:mr-3"
             fill="none"
           >
             <circle
@@ -78,7 +78,7 @@ export function TopIslands({
       {/* Upload Island */}
       <button
         type="button"
-        className="pointer-events-auto island island-icon text-3xl leading-none text-[var(--theme-color)] transition-[color,transform] duration-300 ease-out hover:-translate-y-[1px]"
+        className="pointer-events-auto island island-icon shrink-0 text-3xl leading-none text-[var(--theme-color)] transition-[color,transform] duration-300 ease-out hover:-translate-y-[1px]"
         onClick={onUploadOpen}
         aria-label="上传名字"
       >

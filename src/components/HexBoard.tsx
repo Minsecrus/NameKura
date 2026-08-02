@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import type { CSSProperties, PointerEvent, RefObject } from "react";
 import { HexCard } from "@/components/HexCard";
 import { getCanvasSize } from "@/lib/board-layout";
@@ -22,6 +22,39 @@ type HexBoardProps = {
   onVote: (id: string, delta: "up" | "down") => void;
 };
 
+const EDGE_PADDING = 96;
+
+function clampCanvasOffset(
+  x: number,
+  y: number,
+  viewportWidth: number,
+  viewportHeight: number,
+  canvasWidth: number,
+  canvasHeight: number,
+) {
+  const minX = Math.min(
+    EDGE_PADDING,
+    viewportWidth - canvasWidth - EDGE_PADDING,
+  );
+  const maxX =
+    canvasWidth + EDGE_PADDING < viewportWidth
+      ? (viewportWidth - canvasWidth) / 2
+      : EDGE_PADDING;
+  const minY = Math.min(
+    EDGE_PADDING,
+    viewportHeight - canvasHeight - EDGE_PADDING,
+  );
+  const maxY =
+    canvasHeight + EDGE_PADDING < viewportHeight
+      ? (viewportHeight - canvasHeight) / 2
+      : EDGE_PADDING;
+
+  return {
+    x: Math.min(maxX, Math.max(minX, x)),
+    y: Math.min(maxY, Math.max(minY, y)),
+  };
+}
+
 export function HexBoard({
   viewportRef,
   boardStyle,
@@ -34,7 +67,6 @@ export function HexBoard({
   onCopy,
   onVote,
 }: HexBoardProps) {
-  const [offset, setOffset] = useState({ x: 0, y: 0 });
   const [isDragging, setIsDragging] = useState(false);
   const dragRef = useRef<{
     originX: number;
@@ -56,40 +88,24 @@ export function HexBoard({
     );
   }, [boardMetrics, canvasColumns, columns]);
 
-  const clampOffset = (x: number, y: number) => {
-    const edgePadding = 96;
-    const minX = Math.min(
-      edgePadding,
-      viewportWidth - canvasSize.width - edgePadding,
-    );
-    const maxX = canvasSize.width + edgePadding < viewportWidth
-      ? (viewportWidth - canvasSize.width) / 2
-      : edgePadding;
-    const minY = Math.min(
-      edgePadding,
-      viewportHeight - canvasSize.height - edgePadding,
-    );
-    const maxY = canvasSize.height + edgePadding < viewportHeight
-      ? (viewportHeight - canvasSize.height) / 2
-      : edgePadding;
-
-    return {
-      x: Math.min(maxX, Math.max(minX, x)),
-      y: Math.min(maxY, Math.max(minY, y)),
-    };
-  };
-
-  useEffect(() => {
-    setOffset(
-      clampOffset(
-        (viewportWidth - canvasSize.width) / 2,
-        (viewportHeight - canvasSize.height) / 2,
-      ),
-    );
-  }, [canvasSize.height, canvasSize.width, viewportHeight, viewportWidth]);
+  const [dragOffset, setDragOffset] = useState<{
+    x: number;
+    y: number;
+  } | null>(null);
+  const offset = clampCanvasOffset(
+    dragOffset?.x ?? (viewportWidth - canvasSize.width) / 2,
+    dragOffset?.y ?? (viewportHeight - canvasSize.height) / 2,
+    viewportWidth,
+    viewportHeight,
+    canvasSize.width,
+    canvasSize.height,
+  );
 
   const handlePointerDown = (event: PointerEvent<HTMLDivElement>) => {
-    if (event.target instanceof HTMLElement && event.target.closest("button, input")) {
+    if (
+      event.target instanceof HTMLElement &&
+      event.target.closest("button, input")
+    ) {
       return;
     }
 
@@ -116,10 +132,14 @@ export function HexBoard({
       setIsDragging(true);
     }
 
-    setOffset(
-      clampOffset(
+    setDragOffset(
+      clampCanvasOffset(
         dragRef.current.originX + deltaX,
         dragRef.current.originY + deltaY,
+        viewportWidth,
+        viewportHeight,
+        canvasSize.width,
+        canvasSize.height,
       ),
     );
   };
